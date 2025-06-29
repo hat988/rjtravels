@@ -627,11 +627,11 @@
                 const preloaderTitle = document.getElementById('preloader-title');
                 if (!preloaderTitle) return;
 
-                const titleText = "Riyazul Jannah Tours"; // Updated Text
+                const titleText = "Riyazul Jannah"; // Updated Text
                 titleText.split('').forEach((letter, index) => {
                     const span = document.createElement('span');
                     span.textContent = letter === ' ' ? '\u00A0' : letter;
-                    span.style.animationDelay = `${0.6 + (index * 0.05)}s`;
+                    span.style.animationDelay = `${0.8 + (index * 0.05)}s`;
                     preloaderTitle.appendChild(span);
                 });
 
