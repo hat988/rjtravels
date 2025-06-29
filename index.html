@@ -151,13 +151,13 @@
     .step-item:not(:last-child)::after {
         content: '';
         position: absolute;
-        width: 2px;
+        width: 1px;
         background: linear-gradient(to bottom, #38bdf8, #a5f3fc);
         top: 96px;      /* Starts the line below the icon (96px is the icon's height) */
-        bottom: -3rem;  /* Extends the line into the 3rem gap (gap-y-12) between items */
+        bottom: -1rem;  /* Extends the line into the 3rem gap (gap-y-12) between items */
         left: 50%;
         transform: translateX(-50%);
-        z-index: -1;    /* This is the key: it sends the line behind the text content */
+        z-index: -50;    /* This is the key: it sends the line behind the text content */
     }
 }
         .step-item .icon-wrapper:hover {
