@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riyazul Jannah Tours | Your Sacred Journey Awaits</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: transparent; /* Allows particle background to be visible */
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* --- Global Particle & Gradient Background --- */
+        #site-background {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+        }
+
+        #site-background::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(300deg, #f8fafc, #e0f2fe, #f8fafc, #e0f2fe);
+            background-size: 400% 400%;
+            animation: gradient-animation 25s ease infinite;
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(14, 165, 233, 0.5);
+            border-radius: 50%;
+            animation: drift 25s infinite linear;
+        }
+
+        @keyframes drift {
+            from {
+                transform: translateY(0) translateX(0);
+                opacity: 0.7;
+            }
+            to {
+                transform: translateY(-105vh) translateX(20vw);
+                opacity: 0;
+            }
+        }
+        
+        /* --- Page Load Transition --- */
+        main, footer {
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        main.loaded, footer.loaded {
+            opacity: 1;
+        }
+        
+        /* --- Enhanced Preloader Styles --- */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-in-out, visibility 1s;
+            transition-delay: 0.5s;
+        }
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        #preloader .loader-logo {
+            opacity: 0;
+            transform: scale(0.8);
+            animation: popIn 0.8s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation-delay: 0.2s;
+        }
+        #preloader .loader-content h1 span {
+            display: inline-block;
+            opacity: 0;
+            animation: fadeInLetter 0.5s forwards;
+        }
+
+        /* --- Preloader Animation Option 1 (Current) --- */
+	
+        @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeInLetter { to { opacity: 1; } }
+	        
+        /* --- Hero Section Image BG --- */
+        .hero-section {
+            height: 100vh;
+            max-height: 800px;
+            overflow: hidden;
+            background-image: url('https://images.unsplash.com/photo-1582042714266-4f4a434d31d7?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* --- Mobile Menu Animation --- */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        #mobile-menu.active {
+            max-height: 500px;
+        }
+
+        /* --- Active Nav Link Style --- */
+        .nav-link.active {
+             color: #0ea5e9; /* sky-500 */
+             font-weight: 600;
+        }
+        
+        /* --- Journey Steps Connector Lines --- */
+        .step-item { position: relative; }
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            background: linear-gradient(to right, #38bdf8, #a5f3fc);
+            z-index: 0;
+        }
+        @media (min-width: 768px) { /* Desktop Connector */
+            .step-item:not(:last-child)::after {
+                height: 2px; width: calc(100% - 96px); top: 48px; left: calc(50% + 48px);
+            }
+        }
+        @media (max-width: 767px) { /* Mobile Connector */
+             .step-item:not(:last-child)::after {
+                width: 2px; height: calc(100% - 48px); left: 47px; top: 96px;
+             }
+        }
+        .step-item .icon-wrapper:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.2), 0 8px 10px -6px rgba(14, 165, 233, 0.2);
+        }
+
+        /* --- Gallery Labels --- */
+        .gallery-item { position: relative; overflow: hidden; }
+        .gallery-item .gallery-label {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0, 0, 0, 0.6); color: white; padding: 8px;
+            text-align: center; font-weight: 500;
+            transform: translateY(100%); transition: transform 0.3s ease-in-out;
+        }
+        .gallery-item:hover .gallery-label { transform: translateY(0); }
+
+        /* --- Testimonial Carousel --- */
+        .testimonial-carousel {
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        .testimonial-track {
+            display: flex; width: calc(2 * var(--carousel-width, 2000px));
+            animation: scroll-left 45s linear infinite;
+        }
+        .testimonial-track:hover { animation-play-state: paused; }
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-1 * var(--carousel-width, 2000px))); }
+        }
+
+        /* --- Scroll to Top Button Animation --- */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px 0px rgba(14, 165, 233, 0.5); }
+            50% { box-shadow: 0 0 20px 8px rgba(14, 165, 233, 0); }
+        }
+        #scrollToTopBtn.active { animation: pulse-glow 2s infinite; }
+        #scrollToTopBtn:hover { transform: scale(1.15); }
+        
+        /* --- Scroll Progress Bar --- */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: #0ea5e9;
+            width: 0%;
+            z-index: 100;
+            transition: width 0.1s linear;
+        }
+
+        /* --- Quote Modal Styles --- */
+        #quote-popup {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #quote-popup-backdrop {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: opacity 0.3s ease-in-out;
+        }
+        #quote-popup-content {
+            transform: scale(0.95) translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease-in-out;
+        }
+        #quote-popup.visible #quote-popup-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        /* Scroll-triggered Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+.responsive-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-width: 100%;
+}
+
+
+
+    </style>
+</head>
+<body class="text-slate-700">
+    <!-- Scroll Progress Bar -->
+    <div id="progress-bar"></div>
+
+    <!-- Background container for particles and gradient -->
+    <div id="site-background">
+      <div id="global-particle-container"></div>
+    </div>
+    
+    <!-- Preloader -->
+    <div id="preloader">
+         <div class="text-center">
+            <img id="preloader-logo-img" src="https://i.ibb.co/b50DNLdc/rj-logo-1.png" class="loader-logo w-24 h-24 mx-auto mb-4 rounded-full" alt="Riyazul Jannah Tours Logo">
+            <div class="loader-content">
+                <h1 id="preloader-title" class="text-3xl md:text-4xl font-bold text-sky-600 tracking-wider"></h1>
+                <p id="preloader-subtitle" class="text-slate-500 mt-3 opacity-0 transition-opacity duration-500">Crafting your sacred journey...</p>
+            </div>
+         </div>
+    </div>
+
+    <!-- Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="https://i.ibb.co/b50DNLdc/rj-logo-1.png" class="w-12 h-12 rounded-full" alt="Logo">
+                <span class="text-2xl font-bold text-sky-600 hidden sm:block">Riyazul Jannah</span>
+            </a>
+            <nav id="desktop-nav" class="hidden lg:flex items-center space-x-6">
+                <a href="index.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1 active">Home</a>
+                <a href="about.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">About Us</a>
+                <a href="services.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">Services</a>
+                <a href="package-inclusions.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">Inclusions</a>
+                <a href="visa.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">Visa</a>
+               
+                <a href="contact.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">Contact</a>
+            </nav>
+            <button onclick="openQuoteModal()" class="hidden lg:inline-block bg-sky-500 text-white font-semibold px-5 py-2 rounded-lg hover:bg-sky-600 transition-transform hover:scale-105 shadow-lg">Get a Quote</button>
+             <button id="mobile-menu-button" aria-label="Open Menu" class="lg:hidden text-slate-700 z-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+        </div>
+         <!-- Mobile Menu -->
+        <div id="mobile-menu" class="lg:hidden bg-white/95 backdrop-blur-sm">
+            <a href="index.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50 active">Home</a>
+            <a href="about.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">About Us</a>
+            <a href="services.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">Services</a>
+            <a href="package-inclusions.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">Inclusions</a>
+            <a href="visa.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">Visa</a>
+            
+            <a href="contact.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">Contact</a>
+             <div class="p-4">
+                 <button onclick="openQuoteModal()" class="w-full text-center block bg-sky-500 text-white font-semibold px-5 py-3 rounded-lg hover:bg-sky-600 transition-transform hover:scale-105 shadow-lg">Get a Quote</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="relative hero-section flex items-center justify-center text-white text-center">
+            <
+
+
+<div class="absolute inset-0 bg-black/50">
+  <img 
+    src="https://i.ibb.co/pv797xcQ/a-photo-of-the-holy-kaaba-in-masjid-al-h-Wte-Urg-CJSb-W5b-TPa5-Pk9b-Q-Z2-VRWEDw-Qaml4-Jc-MRHx-OSg.webp"
+    style="height:100vh; width:100vw; object-fit:cover; filter: blur(6px) brightness(0.5);"
+  >
+</div>
+
+
+
+            <div class="relative z-10 px-4">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 animate-on-scroll">A Journey of Faith, <br> Perfected by Us.</h1>
+                <p class="text-lg md:text-xl max-w-2xl mx-auto mb-8 animate-on-scroll" data-delay="200">Experience a seamless and spiritually enriching Umrah. We handle every detail, so you can focus on what truly matters.</p>
+                <a href="#packages" class="bg-sky-500 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-sky-400 transition-all duration-300 transform hover:scale-110 shadow-2xl animate-on-scroll" data-delay="400">Explore Our Packages</a>
+            </div>
+        </section>
+
+        <!-- Why Us Section -->
+        <section id="why-us" class="py-20 md:py-32 bg-transparent">
+             <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4 animate-on-scroll">Why Travel With Us?</h2>
+                <p class="max-w-3xl mx-auto text-slate-500 mb-16 animate-on-scroll" data-delay="100">We are committed to providing an unparalleled experience, blending spiritual devotion with premium comfort and meticulous planning.</p>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 animate-on-scroll" data-delay="200">
+                        <div class="bg-sky-100 p-5 rounded-full inline-block mb-5"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg></div>
+                        <h3 class="text-xl font-semibold mb-2 text-slate-800">Expert Guidance</h3>
+                        <p class="text-slate-500">Our experienced guides are with you every step, ensuring a smooth and meaningful pilgrimage.</p>
+                    </div>
+                    <div class="bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 animate-on-scroll" data-delay="300">
+                        <div class="bg-sky-100 p-5 rounded-full inline-block mb-5"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500"><path d="M12 5c.67 0 1.35.09 2 .26 1.78.47 3.1 2.03 3.5 3.85.13.56.2 1.17.2 1.89v4.2c0 .8-.5 1.5-1.2 1.8s-1.5.2-2.1-.2L12 15l-2.4 1.2c-.6.4-1.4.5-2.1.2-.7-.3-1.2-1-1.2-1.8V11c0-.72.07-1.33.2-1.89.4-1.82 1.72-3.38 3.5-3.85.65-.17 1.33-.26 2-.26Z"/><path d="M12 5V2"/><path d="M7 21v-2"/><path d="M17 21v-2"/></svg></div>
+                        <h3 class="text-xl font-semibold mb-2 text-slate-800">Premium Comfort</h3>
+                        <p class="text-slate-500">Stay in handpicked 5-star hotels close to the Haramain, with luxury transport for all needs.</p>
+                    </div>
+                    <div class="bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 animate-on-scroll" data-delay="400">
+                        <div class="bg-sky-100 p-5 rounded-full inline-block mb-5"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a2 2 0 0 1 3 1.88Z"/></svg></div>
+                        <h3 class="text-xl font-semibold mb-2 text-slate-800">All-Inclusive Service</h3>
+                        <p class="text-slate-500">From visa to flights and local ziarat, every aspect of your journey is meticulously managed.</p>
+                    </div>
+                 </div>
+            </div>
+        </section>
+
+        <!-- Journey at a Glance Section -->
+        <section id="process" class="py-20 md:py-32 bg-transparent">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4 animate-on-scroll">Your Journey at a Glance</h2>
+                    <p class="max-w-3xl mx-auto text-slate-500 animate-on-scroll" data-delay="100">We’ve perfected a seamless process to ensure your pilgrimage is smooth and spiritually fulfilling.</p>
+                </div>
+                <div class="grid md:grid-cols-4 gap-y-12 md:gap-y-0 md:gap-x-4">
+                    <div class="step-item text-center animate-on-scroll" data-delay="200">
+                        <div class="icon-wrapper mx-auto bg-white/70 backdrop-blur-sm border-2 border-sky-200 w-24 h-24 rounded-full flex items-center justify-center shadow-lg mb-4 z-10 relative transition-all duration-300"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500"><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M19 8c1.657 0 3 1.343 3 3v4c0 1.657-1.343 3-3 3h-1"/><path d="m22 12-3-3 3-3"/></svg></div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Consultation</h3>
+                        <p class="text-slate-500 px-2">Share your needs with us, and we'll help you choose the perfect package.</p>
+                    </div>
+                    <div class="step-item text-center animate-on-scroll" data-delay="300">
+                        <div class="icon-wrapper mx-auto bg-white/70 backdrop-blur-sm border-2 border-sky-200 w-24 h-24 rounded-full flex items-center justify-center shadow-lg mb-4 z-10 relative transition-all duration-300"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/></svg></div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Seamless Booking</h3>
+                        <p class="text-slate-500 px-2">We handle all logistics: visas, flights, and hotel bookings, keeping you informed.</p>
+                    </div>
+                    <div class="step-item text-center animate-on-scroll" data-delay="400">
+                        <div class="icon-wrapper mx-auto bg-white/70 backdrop-blur-sm border-2 border-sky-200 w-24 h-24 rounded-full flex items-center justify-center shadow-lg mb-4 z-10 relative transition-all duration-300"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Spiritual Journey</h3>
+                        <p class="text-slate-500 px-2">Embark on your pilgrimage with our expert team on the ground to guide and assist you.</p>
+                    </div>
+                    <div class="step-item text-center animate-on-scroll" data-delay="500">
+                        <div class="icon-wrapper mx-auto bg-white/70 backdrop-blur-sm border-2 border-sky-200 w-24 h-24 rounded-full flex items-center justify-center shadow-lg mb-4 z-10 relative transition-all duration-300"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500"><path d="M2 13.1a9 9 0 0 1 9-5.9c2.32 0 4.45.89 6.08 2.34"/><path d="m22 8-6 6"/><path d="M16 2v6h6"/><path d="M22 10.9a9 9 0 0 1-9 5.9c-2.32 0-4.45-.89-6.08-2.34"/></svg></div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Cherished Return</h3>
+                        <p class="text-slate-500 px-2">Return home with a heart full of peace and memories that will last a lifetime. Insha'Allah.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+       <!-- Packages Section -->
+<section id="packages" class="py-20 md:py-32 bg-transparent">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4 animate-on-scroll">Our Umrah Packages</h2>
+      <p class="max-w-3xl mx-auto text-slate-500 animate-on-scroll" data-delay="100">Displaying our thoughtfully designed packages. Click to see details and inquire.</p>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-8 items-stretch">
+      <!-- Package Card 1 -->
+      <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-all duration-300 group animate-on-scroll flex flex-col" data-delay="200">
+        <img 
+          src="https://i.ibb.co/Jjm9skJF/Riyazul-Jannah-Poster-3.webp" 
+          alt="Economy Umrah Package Poster" 
+          class="w-full aspect-[4/5] object-cover cursor-pointer group-hover:opacity-90 transition-opacity duration-300"
+          onclick="showModal(this.src)"
+        >
+      </div>
+      <!-- Package Card 2 (Popular) -->
+      <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-300 group animate-on-scroll border-2 border-sky-500 flex flex-col" data-delay="300">
+        <div class="relative">
+          <img 
+            src="https://i.ibb.co/4Qy5mD6/Riyazul-Jannah-Poster-2.webp" 
+            alt="Deluxe Umrah Package Poster" 
+            class="w-full aspect-[4/5] object-cover cursor-pointer group-hover:opacity-90 transition-opacity duration-300"
+            onclick="showModal(this.src)"
+          >
+          <div class="absolute top-0 right-0 bg-sky-500 text-white text-sm font-bold px-4 py-1 rounded-bl-lg">Most Popular</div>
+        </div>
+      </div>
+      <!-- Package Card 3 -->
+      <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-all duration-300 group animate-on-scroll flex flex-col" data-delay="400">
+        <img 
+          src="https://i.ibb.co/5XsXMgsm/Riyazul-Jannah-Poster-1.webp" 
+          alt="Family Umrah Package Poster" 
+          class="w-full aspect-[4/5] object-cover cursor-pointer group-hover:opacity-90 transition-opacity duration-300"
+          onclick="showModal(this.src)"
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Modal -->
+  <div id="imgModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden" onclick="hideModal()">
+    <img id="modalImg" src="" alt="Large preview" class="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl" />
+  </div>
+
+  <script>
+    function showModal(src) {
+      const modal = document.getElementById('imgModal');
+      const modalImg = document.getElementById('modalImg');
+      modalImg.src = src;
+      modal.classList.remove('hidden');
+    }
+    function hideModal() {
+      document.getElementById('imgModal').classList.add('hidden');
+      document.getElementById('modalImg').src = '';
+    }
+  </script>
+</section>
+
+
+        <!-- Gallery Section -->
+<section id="gallery" class="py-20 md:py-32 bg-transparent">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4 animate-on-scroll">Glimpses of the Journey</h2>
+      <p class="max-w-3xl mx-auto text-slate-500 animate-on-scroll" data-delay="100">
+        Visual memoirs from the sacred cities, capturing moments of peace and devotion.
+      </p>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="grid gap-4 animate-on-scroll" data-delay="200">
+        <div class="gallery-item rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer aspect-[4/5] overflow-hidden">
+          <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/18274181/pexels-photo-18274181.jpeg" alt="Gallery 1">
+          <div class="gallery-label">Tawaf of Kaaba</div>
+        </div>
+        <div class="gallery-item rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer aspect-[4/5] overflow-hidden">
+          <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/15369686/pexels-photo-15369686.jpeg" alt="Gallery 2">
+          <div class="gallery-label">Masjid al-Nabawi</div>
+        </div>
+      </div>
+      <div class="grid gap-4 animate-on-scroll" data-delay="300">
+        <div class="gallery-item rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer aspect-[4/5] overflow-hidden">
+          <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/8059446/pexels-photo-8059446.jpeg" alt="Gallery 3">
+          <div class="gallery-label">Evening Prayers</div>
+        </div>
+        <div class="gallery-item rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer aspect-[4/5] overflow-hidden">
+          <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/30768739/pexels-photo-30768739.jpeg" alt="Gallery 4">
+          <div class="gallery-label">Zamzam Water</div>
+        </div>
+      </div>
+      <div class="grid gap-4 animate-on-scroll" data-delay="400">
+        <div class="gallery-item rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer aspect-[4/5] overflow-hidden">
+          <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/12765598/pexels-photo-12765598.jpeg" alt="Gallery 5">
+          <div class="gallery-label">Mount Uhud Ziarat</div>
+        </div>
+        <div class="gallery-item rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer aspect-[4/5] overflow-hidden">
+          <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/29343443/pexels-photo-29343443.jpeg" alt="Gallery 6">
+          <div class="gallery-label">Journey in Comfort</div>
+        </div>
+      </div>
+      <div class="grid gap-4 animate-on-scroll" data-delay="500">
+        <div class="gallery-item rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer aspect-[4/5] overflow-hidden">
+          <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/28902955/pexels-photo-28902955.jpeg" alt="Gallery 7">
+          <div class="gallery-label">Reflective Moments</div>
+        </div>
+        <div class="gallery-item rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer aspect-[4/5] overflow-hidden">
+          <img class="w-full h-full object-cover" src="https://images.pexels.com/photos/15948383/pexels-photo-15948383.jpeg" alt="Gallery 8">
+          <div class="gallery-label">Group Guidance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-20 md:py-32 bg-transparent">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4 animate-on-scroll">What Our Pilgrims Say</h2>
+                    <p class="max-w-3xl mx-auto text-slate-500 animate-on-scroll" data-delay="100">The heartfelt duas of those we have had the honor to serve.</p>
+                </div>
+                <div class="testimonial-carousel animate-on-scroll" data-delay="200">
+                     <div id="testimonial-track-js" class="testimonial-track">
+                        <!-- Testimonial cards will be dynamically injected by JavaScript -->
+                    </div>
+                </div>
+            </div>
+         </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800/80 backdrop-blur-sm text-white">
+        <div class="container mx-auto px-6 py-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 text-center md:text-left">
+                 <div class="col-span-2 lg:col-span-2 animate-on-scroll">
+                    <h3 class="text-xl font-bold mb-4">Riyazul Jannah Tours</h3>
+                    <p class="text-slate-400 max-w-md">Crafting serene and memorable spiritual journeys to the holy lands. Let us handle the details while you focus on your devotion.</p>
+                </div>
+                <div class="animate-on-scroll" data-delay="150">
+                    <h3 class="text-xl font-bold mb-4">Company</h3>
+                    <ul class="space-y-2">
+                         <li><a href="about.html" class="text-slate-400 hover:text-sky-400 transition-colors">About Us</a></li>
+                        <li><a href="services.html" class="text-slate-400 hover:text-sky-400 transition-colors">Services</a></li>
+                        <li><a href="blog.html" class="text-slate-400 hover:text-sky-400 transition-colors">Blog</a></li>
+                        <li><a href="contact.html" class="text-slate-400 hover:text-sky-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="animate-on-scroll" data-delay="200">
+                    <h3 class="text-xl font-bold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                         <li><a href="privacy-policy.html" class="text-slate-400 hover:text-sky-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms-conditions.html" class="text-slate-400 hover:text-sky-400 transition-colors">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 md:col-span-1 animate-on-scroll" data-delay="300">
+                    <h3 class="text-xl font-bold mb-4">Follow Us</h3>
+                     <div class="flex space-x-4 justify-center md:justify-start">
+                        <a href="#" aria-label="Facebook" class="text-slate-400 hover:text-sky-400 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5Z"/></svg></a>
+                        <a href="#" aria-label="Twitter" class="text-slate-400 hover:text-sky-400 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M22.999 5.033c.01.27.01.542.01.815 0 8.284-6.313 17.83-17.83 17.83A17.74 17.74 0 0 1 0 21.65a12.55 12.55 0 0 0 1.558.086 12.518 12.518 0 0 0 7.746-2.68c-2.43-.044-4.48-1.656-5.188-3.864a4.425 4.425 0 0 0 2.003-.076c-2.54-.514-4.453-2.753-4.453-5.437v-.06a4.48 4.48 0 0 0 2.02.56c-1.2- .8-1.987-2.17-1.987-3.744 0-.825.22-1.595.61-2.27a12.522 12.522 0 0 0 9.086 4.608 4.49 4.49 0 0 1 4.312-5.918 4.49 4.49 0 0 1 3.32.96 8.93 8.93 0 0 0 2.825-1.08c-.29.92-.916 1.7-1.732 2.19a8.913 8.913 0 0 0 2.56-.69c-.4.86-.947 1.63-1.614 2.27Z"/></svg></a>
+                        <a href="#" aria-label="Instagram" class="text-slate-400 hover:text-sky-400 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919A48.978 48.978 0 0 1 12 2.163Zm0 3.482a6.354 6.354 0 1 0 0 12.708 6.354 6.354 0 0 0 0-12.708ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm4.965-10.405a1.44 1.44 0 1 1 2.88 0 1.44 1.44 0 0 1-2.88 0Z" clip-rule="evenodd"/></svg></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-slate-700 pt-8 text-center text-slate-400 text-sm">
+                <p>&copy; 2024 Riyazul Jannah Tours. All Rights Reserved. <br> Website Crafted By Furqaan K. (+91 74839 26471)</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scroll to Top Button -->
+   <button id="scrollToTopBtn" aria-label="Scroll to Top" class="fixed bottom-6 right-6 bg-sky-500 text-white p-3 rounded-full shadow-lg hover:bg-sky-600 transition-all duration-300 opacity-0 transform translate-y-4 pointer-events-none">
+   
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="32" height="32" aria-hidden="true">
+  <path fill="#fff" d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849m.894.448C7.111 2.02 7 2.569 7 3v4a.5.5 0 0 1-.276.447l-5.448 2.724a.5.5 0 0 0-.276.447v.792l5.418-.903a.5.5 0 0 1 .575.41l.5 3a.5.5 0 0 1-.14.437L6.708 15h2.586l-.647-.646a.5.5 0 0 1-.14-.436l.5-3a.5.5 0 0 1 .576-.411L15 11.41v-.792a.5.5 0 0 0-.276-.447L9.276 7.447A.5.5 0 0 1 9 7V3c0-.432-.11-.979-.322-1.401C8.458 1.159 8.213 1 8 1s-.458.158-.678.599"/>
+</svg>
+
+
+
+</button>
+
+    <!-- Quote Popup Modal -->
+    <div id="quote-popup" class="fixed inset-0 z-[10000] flex items-center justify-center p-4 hidden opacity-0">
+        <div id="quote-popup-backdrop" class="absolute inset-0" onclick="closeQuoteModal()"></div>
+        <div id="quote-popup-content" class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full text-center p-8 md:p-10">
+            <button onclick="closeQuoteModal()" aria-label="Close popup" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div class="mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">Inspiration for Your Journey</h2>
+            <blockquote id="umrah-quote" class="text-lg italic text-slate-600 leading-relaxed my-6 min-h-[100px]"></blockquote>
+            <button onclick="openQuoteModal()" class="mt-2 bg-sky-100 text-sky-700 font-semibold px-5 py-2 rounded-lg hover:bg-sky-200 transition-colors">
+                New Quote
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Element Selectors ---
+            const mainContent = document.querySelector('main');
+            const footerContent = document.querySelector('footer');
+            const preloader = document.getElementById('preloader');
+            const header = document.getElementById('header');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            const progressBar = document.getElementById('progress-bar');
+            const quotePopup = document.getElementById('quote-popup');
+            const umrahQuoteEl = document.getElementById('umrah-quote');
+
+            // --- Umrah Quotes ---
+            const umrahQuotes = [
+                "The journey of a thousand miles begins with a single step. The journey to the Kaaba begins with a single intention.",
+                "To be a guest of Allah is the greatest honor. May your Umrah be accepted.",
+                "In the sight of the Kaaba, worries fade and the soul finds its peace.",
+                "Labbayk Allahumma Labbayk. Here I am, O Allah, here I am.",
+                "Zamzam is a cure for whatever it is drunk for. May it quench your spiritual thirst.",
+                "Every step taken towards the House of Allah is a step away from sin and a step closer to Jannah.",
+                "The feeling of unity in the crowd of pilgrims is a glimpse of the Day of Judgment.",
+                "May your Tawaf be a dance of love around the House of your Beloved.",
+                "Safa and Marwa teach us patience and trust in Allah's plan.",
+                "An Umrah is an expiation for the sins committed between it and the next."
+            ];
+
+            // --- Preloader Logic ---
+            const setupPreloader = () => {
+                const preloaderTitle = document.getElementById('preloader-title');
+                if (!preloaderTitle) return;
+
+                const titleText = "Riyazul Jannah Tours"; // Updated Text
+                titleText.split('').forEach((letter, index) => {
+                    const span = document.createElement('span');
+                    span.textContent = letter === ' ' ? '\u00A0' : letter;
+                    span.style.animationDelay = `${0.6 + (index * 0.05)}s`;
+                    preloaderTitle.appendChild(span);
+                });
+
+                setTimeout(() => {
+                    document.getElementById('preloader-subtitle')?.classList.add('opacity-1');
+                }, 800 + titleText.length * 50);
+
+                window.addEventListener('load', () => {
+                    setTimeout(() => {
+                        preloader?.classList.add('hidden');
+                        mainContent?.classList.add('loaded');
+                        footerContent?.classList.add('loaded');
+                    }, 1500);
+                });
+            };
+
+            // --- Particle Animation ---
+            const createParticles = () => {
+                const container = document.getElementById('global-particle-container');
+                if (!container) return;
+                const particleCount = 25;
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    const size = Math.random() * 8 + 1;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.bottom = `-50px`;
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.animationDuration = `${Math.random() * 15 + 15}s`;
+                    particle.style.animationDelay = `${Math.random() * 15}s`;
+                    particle.style.opacity = (Math.random() * 0.5 + 0.1).toString();
+                    container.appendChild(particle);
+                }
+            };
+
+            // --- Header, Navigation & Scroll Progress ---
+            const handleScroll = () => {
+                // Sticky Header
+                if (window.scrollY > 50) {
+                    header?.classList.add('bg-white/95', 'shadow-md', 'backdrop-blur-sm');
+                } else {
+                    header?.classList.remove('bg-white/95', 'shadow-md', 'backdrop-blur-sm');
+                }
+
+                // Scroll to top button
+                if (window.scrollY > 300) {
+                    scrollToTopBtn?.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+                    scrollToTopBtn?.classList.add('active');
+                } else {
+                    scrollToTopBtn?.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+                    scrollToTopBtn?.classList.remove('active');
+                }
+                
+                // Progress bar
+                if(progressBar) {
+                    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const progress = (window.scrollY / totalHeight) * 100;
+                    progressBar.style.width = `${progress}%`;
+                }
+            };
+
+            const setupNavigation = () => {
+                window.addEventListener('scroll', handleScroll);
+                scrollToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+                mobileMenuButton?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mobileMenu?.classList.toggle('active');
+                });
+                document.querySelectorAll('#mobile-menu a').forEach(link => {
+                    link.addEventListener('click', () => mobileMenu?.classList.remove('active'));
+                });
+            };
+            
+            // --- Quote Modal Logic ---
+            window.openQuoteModal = () => {
+                if (!quotePopup || !umrahQuoteEl) return;
+                
+                // Get a random quote
+                const randomIndex = Math.floor(Math.random() * umrahQuotes.length);
+                umrahQuoteEl.textContent = `“${umrahQuotes[randomIndex]}”`;
+
+                quotePopup.classList.remove('hidden');
+                setTimeout(() => {
+                    quotePopup.classList.add('visible', 'opacity-100');
+                }, 10);
+            };
+
+            window.closeQuoteModal = () => {
+                if (!quotePopup) return;
+                quotePopup.classList.remove('visible', 'opacity-100');
+                setTimeout(() => {
+                    quotePopup.classList.add('hidden');
+                }, 300);
+            };
+
+            // --- Animate on Scroll Logic ---
+            const setupScrollAnimations = () => {
+                const scrollElements = document.querySelectorAll('.animate-on-scroll');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            const delay = parseInt(el.getAttribute('data-delay') || '0');
+                            setTimeout(() => {
+                                el.classList.add('is-visible');
+                            }, delay);
+                            observer.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                scrollElements.forEach(el => observer.observe(el));
+            };
+
+            // --- Testimonial Carousel Logic ---
+            const setupTestimonials = () => {
+                const track = document.getElementById('testimonial-track-js');
+                if (!track) return;
+
+                const testimonials = [
+                    { name: 'Ahmed Khan', location: 'Mumbai, India', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d', text: '"From the moment we booked until our return, every detail was handled with utmost professionalism. It was a truly spiritual and worry-free journey. JazakAllah Khair."' },
+                    { name: 'Fatima Ali', location: 'Dubai, UAE', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026705d', text: '"The hotels were incredible, just steps away from the Haram. The guidance provided during the Umrah rites was invaluable. Highly recommended for families."' },
+                    { name: 'Yusuf Abdullah', location: 'London, UK', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026706d', text: '"Riyazul Jannah Tours exceeded all our expectations. The team is passionate, caring, and incredibly organized. Our trip was a blessing in every sense."' },
+                    { name: 'Aisha Begum', location: 'Dhaka, Bangladesh', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026707d', text: '"The all-inclusive package made everything so simple. We could truly focus on our prayers and reflection without any worldly stress. A wonderful experience."' },
+                    { name: 'Omar Sharif', location: 'Cairo, Egypt', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026708d', text: '"I travelled with my elderly parents, and the special assistance provided was exceptional. The team showed great patience and care. We are very grateful."' }
+                ];
+
+                const allTestimonials = [...testimonials, ...testimonials];
+                track.innerHTML = allTestimonials.map(t => `
+                    <div class="testimonial-card flex-shrink-0 w-[90vw] sm:w-[380px] bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border-t-4 border-sky-300 mx-4 flex flex-col">
+                        <p class="text-slate-600 mb-6 flex-grow">“${t.text}”</p>
+                        <div class="flex items-center mt-auto">
+                            <img class="w-12 h-12 rounded-full mr-4 object-cover bg-slate-200" src="${t.avatar}" onerror="this.onerror=null;this.src='https://placehold.co/48x48/e2e8f0/64748b?text=P';" alt="Avatar of ${t.name}">
+                            <div>
+                                <p class="font-semibold text-slate-800">${t.name}</p>
+                                <p class="text-sm text-slate-400">${t.location}</p>
+                            </div>
+                        </div>
+                    </div>`).join('');
+                
+                const card = track.querySelector('.testimonial-card');
+                if (card) {
+                    const cardMargin = 32;
+                    const cardWidth = card.offsetWidth + cardMargin;
+                    track.style.setProperty('--carousel-width', `${testimonials.length * cardWidth}px`);
+                }
+            };
+
+            // --- Initialize All Scripts ---
+            setupPreloader();
+            createParticles();
+            setupNavigation();
+            setupScrollAnimations();
+            setupTestimonials();
+        });
+    </script>
+</body>
+</html>

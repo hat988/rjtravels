@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visa Services | Riyazul Jannah Tours</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: transparent; position: relative; overflow-x: hidden; }
+        #site-background { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; }
+        #site-background::before { content: ''; position: absolute; inset: 0; background: linear-gradient(300deg, #f8fafc, #e0f2fe, #f8fafc, #e0f2fe); background-size: 400% 400%; animation: gradient-animation 25s ease infinite; }
+        @keyframes gradient-animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .particle { position: absolute; background: rgba(14, 165, 233, 0.5); border-radius: 50%; animation: drift 25s infinite linear; }
+        @keyframes drift { from { transform: translateY(0) translateX(0); opacity: 0.7; } to { transform: translateY(-105vh) translateX(20vw); opacity: 0; } }
+        main, footer { opacity: 0; transition: opacity 0.8s ease-in-out; }
+        main.loaded, footer.loaded { opacity: 1; }
+        #mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
+        #mobile-menu.active { max-height: 500px; }
+        .nav-link.active { color: #0ea5e9; font-weight: 600; }
+        #scrollToTopBtn:hover { transform: scale(1.15); }
+        #progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: #0ea5e9; width: 0%; z-index: 100; transition: width 0.1s linear; }
+        .animate-on-scroll { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .animate-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+        
+        /* Custom form styles */
+        .form-input, .form-select, .form-textarea {
+             background-color: #f8fafc;
+             border-color: #cbd5e1;
+             transition: all 0.2s ease-in-out;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+             border-color: #38bdf8;
+             box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+             background-color: #fff;
+        }
+        .form-radio-label {
+             border: 2px solid #cbd5e1;
+             padding: 0.75rem 1rem;
+             border-radius: 0.5rem;
+             cursor: pointer;
+             transition: all 0.2s ease-in-out;
+        }
+        input[type="radio"]:checked + .form-radio-label {
+             border-color: #0ea5e9;
+             background-color: #e0f2fe;
+             color: #0c4a6e;
+             font-weight: 600;
+        }
+        
+        /* --- Quote Modal Styles --- */
+        #quote-popup {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        #quote-popup-backdrop {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: opacity 0.3s ease-in-out;
+        }
+        #quote-popup-content {
+            transform: scale(0.95) translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease-in-out;
+        }
+        #quote-popup.visible #quote-popup-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body class="text-slate-700">
+    <!-- Scroll Progress Bar -->
+    <div id="progress-bar"></div>
+    <div id="site-background"><div id="global-particle-container"></div></div>
+
+    <!-- Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <img src="https://i.ibb.co/b50DNLdc/rj-logo-1.png" class="w-12 h-12 rounded-full" alt="Logo">
+                <span class="text-2xl font-bold text-sky-600 hidden sm:block">Riyazul Jannah</span>
+            </a>
+            <nav id="desktop-nav" class="hidden lg:flex items-center space-x-6">
+                <a href="index.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">Home</a>
+                <a href="about.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">About Us</a>
+                <a href="services.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">Services</a>
+                <a href="package-inclusions.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">Inclusions</a>
+                <a href="visa.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1 active">Visa</a>
+              
+                <a href="contact.html" class="nav-link text-slate-600 hover:text-sky-500 transition-colors px-2 py-1">Contact</a>
+            </nav>
+            <button onclick="openQuoteModal()" class="hidden lg:inline-block bg-sky-500 text-white font-semibold px-5 py-2 rounded-lg hover:bg-sky-600 transition-transform hover:scale-105 shadow-lg">Get a Quote</button>
+            <button id="mobile-menu-button" aria-label="Open Menu" class="lg:hidden text-slate-700 z-50"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
+        </div>
+        <div id="mobile-menu" class="lg:hidden bg-white/95 backdrop-blur-sm">
+            <a href="index.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">Home</a>
+            <a href="about.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">About Us</a>
+            <a href="services.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">Services</a>
+            <a href="package-inclusions.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">Inclusions</a>
+            <a href="visa.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50 active">Visa</a>
+           
+            <a href="contact.html" class="nav-link block py-3 px-6 text-slate-600 hover:bg-sky-50">Contact</a>
+            <div class="p-4"><button onclick="openQuoteModal()" class="w-full text-center block bg-sky-500 text-white font-semibold px-5 py-3 rounded-lg hover:bg-sky-600 transition-transform hover:scale-105 shadow-lg">Get a Quote</button></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24">
+        <!-- Page Header -->
+        <section class="py-20 bg-sky-500/10 text-center">
+            <div class="container mx-auto px-6">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 animate-on-scroll">Hassle-Free Visa Services</h1>
+                <p class="text-lg text-slate-600 mt-4 max-w-3xl mx-auto animate-on-scroll" data-delay="100">Let us handle the complexities of visa processing for you. Start your application today.</p>
+            </div>
+        </section>
+
+        <!-- Visa Form Section -->
+        <section class="py-20 md:py-28 bg-transparent">
+            <div class="container mx-auto px-6">
+                 <div class="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden">
+                    <div class="grid lg:grid-cols-5">
+                        <!-- Left Side Info Panel -->
+                        <div class="lg:col-span-2 bg-gradient-to-br from-sky-500 to-sky-600 text-white p-8 md:p-10 flex flex-col justify-center">
+                             <h2 class="text-3xl font-bold mb-4">Why Us for Your Visa?</h2>
+                             <p class="text-sky-100 mb-6">Our dedicated team simplifies the visa process with expertise and efficiency.</p>
+                             <ul class="space-y-4 text-sky-50">
+                                <li class="flex items-start"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 mt-1 shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span><strong>Expert Handling:</strong> We navigate the requirements to avoid common pitfalls.</span></li>
+                                <li class="flex items-start"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 mt-1 shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span><strong>Fast Turnaround:</strong> We expedite your application for timely approval.</span></li>
+                                <li class="flex items-start"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 mt-1 shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span><strong>Full Support:</strong> We're available to answer all your questions along the way.</span></li>
+                             </ul>
+                        </div>
+                        
+                        <!-- Right Side Form -->
+                        <div class="lg:col-span-3 p-8 md:p-10">
+                            <h2 class="text-2xl font-bold text-slate-800 mb-6">Visa Application Request</h2>
+                            <form id="visaForm" class="space-y-5">
+                                <div>
+                                    <label for="visa-name" class="font-medium text-slate-700">Full Name of Lead Applicant</label>
+                                    <input type="text" name="name" id="visa-name" class="form-input mt-1 w-full p-3 rounded-lg" required>
+                                </div>
+                                <div class="grid sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label for="visa-email" class="font-medium text-slate-700">Email Address</label>
+                                        <input type="email" name="email" id="visa-email" class="form-input mt-1 w-full p-3 rounded-lg" required>
+                                    </div>
+                                    <div>
+                                        <label for="visa-phone" class="font-medium text-slate-700">Phone Number</label>
+                                        <input type="tel" name="phone" id="visa-phone" class="form-input mt-1 w-full p-3 rounded-lg" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label for="visa-type" class="font-medium text-slate-700">Type of Visa</label>
+                                        <select id="visa-type" name="visa-type" class="form-select mt-1 w-full p-3 rounded-lg" required>
+                                            <option value="">Select Visa Type</option>
+                                            <option value="umrah">Umrah Visa</option>
+                                            <option value="tourist">Tourist Visa</option>
+                                            <option value="business">Business Visa</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="font-medium text-slate-700 block mb-1">Application Type</label>
+                                        <div class="flex space-x-3 mt-1">
+                                            <div class="flex-1">
+                                                <input type="radio" name="application-type" id="individual" value="individual" class="sr-only" checked onchange="toggleGroupSize(false)">
+                                                <label for="individual" class="form-radio-label block text-center">Individual</label>
+                                            </div>
+                                            <div class="flex-1">
+                                                <input type="radio" name="application-type" id="group" value="group" class="sr-only" onchange="toggleGroupSize(true)">
+                                                <label for="group" class="form-radio-label block text-center">Group</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="group-size-wrapper" class="hidden">
+                                    <label for="group-size" class="font-medium text-slate-700">Number of Applicants in Group</label>
+                                    <input type="number" name="group-size" id="group-size" min="2" class="form-input mt-1 w-full p-3 rounded-lg">
+                                </div>
+
+                                <div>
+                                    <label for="visa-message" class="font-medium text-slate-700">Additional Information</label>
+                                    <textarea id="visa-message" name="message" rows="4" placeholder="Mention passport numbers, travel dates, or any other relevant details." class="form-textarea mt-1 w-full p-3 rounded-lg"></textarea>
+                                </div>
+                                <button id="visa-submit-button" type="submit" class="w-full bg-sky-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-600 transition-all duration-300 transform hover:scale-105">Send Visa Request</button>
+                                <p id="visa-form-status" class="text-center mt-3 h-5"></p>
+                            </form>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800/80 backdrop-blur-sm text-white">
+        <div class="container mx-auto px-6 py-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 text-center md:text-left">
+                 <div class="col-span-2 lg:col-span-2">
+                    <h3 class="text-xl font-bold mb-4">Riyazul Jannah Tours</h3>
+                    <p class="text-slate-400 max-w-md">Crafting serene and memorable spiritual journeys to the holy lands. Let us handle the details while you focus on your devotion.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Company</h3>
+                    <ul class="space-y-2">
+                         <li><a href="about.html" class="text-slate-400 hover:text-sky-400 transition-colors">About Us</a></li>
+                        <li><a href="services.html" class="text-slate-400 hover:text-sky-400 transition-colors">Services</a></li>
+                        <li><a href="blog.html" class="text-slate-400 hover:text-sky-400 transition-colors">Blog</a></li>
+                        <li><a href="contact.html" class="text-slate-400 hover:text-sky-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                         <li><a href="privacy-policy.html" class="text-slate-400 hover:text-sky-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms-conditions.html" class="text-slate-400 hover:text-sky-400 transition-colors">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <h3 class="text-xl font-bold mb-4">Follow Us</h3>
+                     <div class="flex space-x-4 justify-center md:justify-start">
+                        <a href="#" aria-label="Facebook" class="text-slate-400 hover:text-sky-400 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5Z"/></svg></a>
+                        <a href="#" aria-label="Twitter" class="text-slate-400 hover:text-sky-400 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M22.999 5.033c.01.27.01.542.01.815 0 8.284-6.313 17.83-17.83 17.83A17.74 17.74 0 0 1 0 21.65a12.55 12.55 0 0 0 1.558.086 12.518 12.518 0 0 0 7.746-2.68c-2.43-.044-4.48-1.656-5.188-3.864a4.425 4.425 0 0 0 2.003-.076c-2.54-.514-4.453-2.753-4.453-5.437v-.06a4.48 4.48 0 0 0 2.02.56c-1.2- .8-1.987-2.17-1.987-3.744 0-.825.22-1.595.61-2.27a12.522 12.522 0 0 0 9.086 4.608 4.49 4.49 0 0 1 4.312-5.918 4.49 4.49 0 0 1 3.32.96 8.93 8.93 0 0 0 2.825-1.08c-.29.92-.916 1.7-1.732 2.19a8.913 8.913 0 0 0 2.56-.69c-.4.86-.947 1.63-1.614 2.27Z"/></svg></a>
+                        <a href="#" aria-label="Instagram" class="text-slate-400 hover:text-sky-400 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919A48.978 48.978 0 0 1 12 2.163Zm0 3.482a6.354 6.354 0 1 0 0 12.708 6.354 6.354 0 0 0 0-12.708ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm4.965-10.405a1.44 1.44 0 1 1 2.88 0 1.44 1.44 0 0 1-2.88 0Z" clip-rule="evenodd"/></svg></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-slate-700 pt-8 text-center text-slate-400 text-sm">
+                 <p>&copy; 2024 Riyazul Jannah Tours. All Rights Reserved. <br> Website Crafted By Furqaan K. (+91 74839 26471)</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" aria-label="Scroll to Top" class="fixed bottom-6 right-6 bg-sky-500 text-white p-3 rounded-full shadow-lg hover:bg-sky-600 transition-all duration-300 opacity-0 transform translate-y-4 pointer-events-none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="32" height="32" aria-hidden="true">
+  <path fill="#fff" d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849m.894.448C7.111 2.02 7 2.569 7 3v4a.5.5 0 0 1-.276.447l-5.448 2.724a.5.5 0 0 0-.276.447v.792l5.418-.903a.5.5 0 0 1 .575.41l.5 3a.5.5 0 0 1-.14.437L6.708 15h2.586l-.647-.646a.5.5 0 0 1-.14-.436l.5-3a.5.5 0 0 1 .576-.411L15 11.41v-.792a.5.5 0 0 0-.276-.447L9.276 7.447A.5.5 0 0 1 9 7V3c0-.432-.11-.979-.322-1.401C8.458 1.159 8.213 1 8 1s-.458.158-.678.599"/>
+</svg>
+    </button>
+
+    <!-- Quote Popup Modal -->
+    <div id="quote-popup" class="fixed inset-0 z-[10000] flex items-center justify-center p-4 hidden opacity-0">
+        <div id="quote-popup-backdrop" class="absolute inset-0" onclick="closeQuoteModal()"></div>
+        <div id="quote-popup-content" class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full text-center p-8 md:p-10">
+            <button onclick="closeQuoteModal()" aria-label="Close popup" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div class="mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">Inspiration for Your Journey</h2>
+            <blockquote id="umrah-quote" class="text-lg italic text-slate-600 leading-relaxed my-6 min-h-[100px]"></blockquote>
+            <button onclick="openQuoteModal()" class="mt-2 bg-sky-100 text-sky-700 font-semibold px-5 py-2 rounded-lg hover:bg-sky-200 transition-colors">
+                New Quote
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainContent = document.querySelector('main');
+            const footerContent = document.querySelector('footer');
+            const header = document.getElementById('header');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            const progressBar = document.getElementById('progress-bar');
+            const quotePopup = document.getElementById('quote-popup');
+            const umrahQuoteEl = document.getElementById('umrah-quote');
+            
+            const umrahQuotes = [
+                "The journey of a thousand miles begins with a single step. The journey to the Kaaba begins with a single intention.",
+                "To be a guest of Allah is the greatest honor. May your Umrah be accepted.",
+                "In the sight of the Kaaba, worries fade and the soul finds its peace.",
+                "Labbayk Allahumma Labbayk. Here I am, O Allah, here I am.",
+                "Zamzam is a cure for whatever it is drunk for. May it quench your spiritual thirst.",
+                "Every step taken towards the House of Allah is a step away from sin and a step closer to Jannah.",
+                "The feeling of unity in the crowd of pilgrims is a glimpse of the Day of Judgment.",
+                "May your Tawaf be a dance of love around the House of your Beloved.",
+                "Safa and Marwa teach us patience and trust in Allah's plan.",
+                "An Umrah is an expiation for the sins committed between it and the next."
+            ];
+            
+            window.addEventListener('load', () => {
+                mainContent?.classList.add('loaded');
+                footerContent?.classList.add('loaded');
+            });
+
+            const createParticles = () => {
+                const container = document.getElementById('global-particle-container');
+                if (!container) return;
+                const particleCount = 25;
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    const size = Math.random() * 8 + 1;
+                    particle.style.width = `${size}px`; particle.style.height = `${size}px`;
+                    particle.style.bottom = `-50px`; particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.animationDuration = `${Math.random() * 15 + 15}s`;
+                    particle.style.animationDelay = `${Math.random() * 15}s`;
+                    particle.style.opacity = (Math.random() * 0.5 + 0.1).toString();
+                    container.appendChild(particle);
+                }
+            };
+
+            const handleScroll = () => {
+                if (window.scrollY > 50) header?.classList.add('bg-white/95', 'shadow-md', 'backdrop-blur-sm');
+                else header?.classList.remove('bg-white/95', 'shadow-md', 'backdrop-blur-sm');
+                if (window.scrollY > 300) {
+                    scrollToTopBtn?.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+                } else {
+                    scrollToTopBtn?.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+                }
+                if(progressBar) {
+                    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    progressBar.style.width = `${(window.scrollY / totalHeight) * 100}%`;
+                }
+            };
+
+            const setupNavigation = () => {
+                window.addEventListener('scroll', handleScroll);
+                scrollToTopBtn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+                mobileMenuButton?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mobileMenu?.classList.toggle('active');
+                });
+            };
+
+            const setupScrollAnimations = () => {
+                const scrollElements = document.querySelectorAll('.animate-on-scroll');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            const delay = parseInt(el.getAttribute('data-delay') || '0');
+                            setTimeout(() => el.classList.add('is-visible'), delay);
+                            observer.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                scrollElements.forEach(el => observer.observe(el));
+            };
+
+            window.toggleGroupSize = (show) => {
+                const wrapper = document.getElementById('group-size-wrapper');
+                const input = document.getElementById('group-size');
+                if(show) {
+                    wrapper.classList.remove('hidden');
+                    input.required = true;
+                } else {
+                    wrapper.classList.add('hidden');
+                    input.required = false;
+                }
+            };
+            
+            const setupVisaForm = () => {
+                const form = document.getElementById('visaForm');
+                if (!form) return;
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const submitButton = document.getElementById('visa-submit-button');
+                    const statusMessage = document.getElementById('visa-form-status');
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Sending...';
+                    statusMessage.textContent = '';
+                    statusMessage.classList.remove('text-green-600', 'text-red-600');
+                    setTimeout(() => {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Send Visa Request';
+                        statusMessage.textContent = 'Success! Your visa request has been sent.';
+                        statusMessage.classList.add('text-green-600');
+                        form.reset();
+                        setTimeout(() => { statusMessage.textContent = ''; }, 5000);
+                    }, 1500);
+                });
+            };
+            
+            window.openQuoteModal = () => {
+                if (!quotePopup || !umrahQuoteEl) return;
+                const randomIndex = Math.floor(Math.random() * umrahQuotes.length);
+                umrahQuoteEl.textContent = `“${umrahQuotes[randomIndex]}”`;
+                quotePopup.classList.remove('hidden');
+                setTimeout(() => {
+                    quotePopup.classList.add('visible', 'opacity-100');
+                }, 10);
+            };
+
+            window.closeQuoteModal = () => {
+                if (!quotePopup) return;
+                quotePopup.classList.remove('visible', 'opacity-100');
+                setTimeout(() => {
+                    quotePopup.classList.add('hidden');
+                }, 300);
+            };
+
+            // --- Initialize ---
+            createParticles();
+            setupNavigation();
+            setupScrollAnimations();
+            setupVisaForm();
+        });
+    </script>
+</body>
+</html>
