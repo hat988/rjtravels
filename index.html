@@ -80,7 +80,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease-in-out, visibility 1s;
+            transition: opacity 2s ease-in-out, visibility 1s;
             transition-delay: 0.5s;
         }
         #preloader.hidden {
@@ -89,14 +89,14 @@
         }
         #preloader .loader-logo {
             opacity: 0;
-            transform: scale(0.8);
+            transform: scale(0.5);
             animation: popIn 0.8s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation-delay: 0.2s;
         }
         #preloader .loader-content h1 span {
             display: inline-block;
             opacity: 0;
-            animation: fadeInLetter 0.5s forwards;
+            animation: fadeInLetter 1s forwards;
         }
 
         /* --- Preloader Animation Option 1 (Current) --- */
