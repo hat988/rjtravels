@@ -143,11 +143,23 @@
                 height: 2px; width: calc(100% - 96px); top: 48px; left: calc(50% + 48px);
             }
         }
-        @media (max-width: 767px) { /* Mobile Connector */
-             .step-item:not(:last-child)::after {
-                width: 2px; height: calc(100% - 48px); left: 47px; top: 96px;
-             }
-        }
+        @media (max-width: 767px) { /* Mobile Connector - Final Layering Fix */
+    .step-item {
+        position: relative; /* Establishes a stacking context for z-index */
+        z-index: 1;
+    }
+    .step-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        background: linear-gradient(to bottom, #38bdf8, #a5f3fc);
+        top: 96px;      /* Starts the line below the icon (96px is the icon's height) */
+        bottom: -3rem;  /* Extends the line into the 3rem gap (gap-y-12) between items */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: -1;    /* This is the key: it sends the line behind the text content */
+    }
+}
         .step-item .icon-wrapper:hover {
             transform: scale(1.1);
             box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.2), 0 8px 10px -6px rgba(14, 165, 233, 0.2);
